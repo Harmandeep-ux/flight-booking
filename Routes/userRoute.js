@@ -6,6 +6,7 @@ const { z } = require('zod');
 const userModel = require('../Models/userModel');
 const {userMiddleware} = require('../Middleware/authMiddleware');
 const BookingModel = require('../Models/BookingModel');
+const flightModel = require('../Models/flightModel')
 
 const userRouter = express.Router();
 
@@ -75,7 +76,7 @@ userRouter.get('/bookings', userMiddleware, async (req, res) => {
   try {
     const userId = req.user.id; // From token (middleware)
 
-    const bookings = await BookingModel.find({ user: userId }).populate('flight');
+    const bookings = await BookingModel.find({ user: userId }).populate('flight').populate('user');
     if(bookings.length == 0){
         res.json({msg:"no bookings for this user"})
     }
@@ -87,6 +88,31 @@ userRouter.get('/bookings', userMiddleware, async (req, res) => {
     res.status(500).json({ msg: "Failed to get bookings", error: err.message });
   }
 });
+
+// userRouter.get('/bookings',async(req,res)=>{
+
+//     //  const Bookings =await BookingModel.find()
+//      const Bookings =await BookingModel.find().populate('flight').populate('user')
+//         if(Bookings.length > 0){
+//           res.json({Bookings})
+//         }else{
+//             res.json({msg:"no bookings avaliable"})
+//         }
+    
+// })
+
+userRouter.get("/allFlights",async(req,res) =>{
+    try{
+       const flights = await flightModel.find()
+       if(flights.length >0){
+        res.json({flights})
+       }else{
+        res.json({msg:"no flights are available right now"})
+       }
+    }catch(err){
+        res.json({err})
+    }
+})
 
 module.exports = userRouter;
 
