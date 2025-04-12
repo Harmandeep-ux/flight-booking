@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -12,19 +13,44 @@ export default function Signin() {
         setUser(prev => ({ ...prev, [name]: value }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const { name, email, password } = user;
-
+    
         if ((isSignIn && (!email || !password)) || (!isSignIn && (!name || !email || !password))) {
             alert('Please fill all fields!');
             return;
         }
-
-        console.log(user);
-
-        navigate(isAdmin ? '/adminhome' : '/userhome');
+    
+        try {
+            let response;
+    
+            if (!isAdmin) {
+                // User
+                if (isSignIn) {
+                    response = await axios.post("http://localhost:3000/user/signin", { email, password }, { withCredentials: true });
+                } else {
+                    response = await axios.post("http://localhost:3000/user/signup", { name, email, password }, { withCredentials: true });
+                }
+            } else {
+                // Admin
+                if (isSignIn) {
+                    response = await axios.post("http://localhost:3000/admin/signin", { email, password }, { withCredentials: true });
+                } else {
+                    response = await axios.post("http://localhost:3000/admin/signup", { name, email, password }, { withCredentials: true });
+                }
+            }
+    
+            console.log(response.data);
+    
+            navigate(isAdmin ? '/adminhome' : '/userhome');
+    
+        } catch (error) {
+            console.error(error.response?.data || error.message);
+            alert(error.response?.data?.message || "Something went wrong!");
+        }
     };
+    
 
     const toggleUserAdmin = () => setIsAdmin(prev => !prev);
     const toggleMode = () => setIsSignIn(prev => !prev);

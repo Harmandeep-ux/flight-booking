@@ -25,6 +25,7 @@ const signSchema = z.object({
 userRouter.post('/signup', async (req, res) => {
     const { email, username, password } = req.body;
 
+
     const validation = signupSchema.safeParse(req.body);
     if (!validation.success) {
         return res.status(400).json({ error: validation.error.errors });
@@ -47,6 +48,7 @@ userRouter.post('/signup', async (req, res) => {
 // Signin route
 userRouter.post('/signin', async (req, res) => {
     const { email, password } = req.body;
+    console.log( email, password)
 
     const validation = signSchema.safeParse(req.body);
     if (!validation.success) {
@@ -63,7 +65,7 @@ userRouter.post('/signin', async (req, res) => {
 
     if (isMatch) {
         const token = jwt.sign({ id: user._id,}, process.env.Jwt_User_secret);
-        return res.json({ token });
+        return res.cookie("auth", token );
     } else {
         return res.json({ msg: 'invalid credentials' });
     }

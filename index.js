@@ -5,11 +5,14 @@ const flightRouter = require('./Routes/FlightRoute')
 const app = express();
 const db = require('./config/db');
 const BookingRoute = require('./Routes/BookingRoute');
-const cors = require('cors')
+const cors = require('cors');
+const { get } = require('mongoose');
 require('dotenv').config()
 
 app.use(cors({
-    origin:"http://localhost:5173"
+
+    origin:"http://localhost:5173",
+    credentials: true   
 }))
 
 app.use(express.json());
