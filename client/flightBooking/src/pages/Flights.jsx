@@ -4,6 +4,7 @@ import axios from 'axios';
 const Flights = () => {
   const [flights, setFlights] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [bookedFlights, setBookedFlights] = useState({}); // key = flight._id, value = true/false
 
   const fetchAllFlights = async () => {
     try {
@@ -19,6 +20,21 @@ const Flights = () => {
   useEffect(() => {
     fetchAllFlights();
   }, []);
+
+
+  const bookingHandler = (id) => {
+    const updated = {
+      ...bookedFlights,
+      [id]: true,
+    };
+    setBookedFlights(updated);
+  };
+  
+  const cancelingHandler = (id) => {
+    const updated = { ...bookedFlights };
+    delete updated[id];
+    setBookedFlights(updated);
+  };
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-10">
@@ -42,27 +58,29 @@ const Flights = () => {
               />
               <div className="p-5">
                 <h2 className="text-xl font-semibold text-blue-800 mb-1">{flight.name}</h2>
-                <p className="text-gray-600 mb-1">
-                  <span className="font-semibold">From:</span> {flight.origin}
-                </p>
-                <p className="text-gray-600 mb-1">
-                  <span className="font-semibold">To:</span> {flight.destination}
-                </p>
-                <p className="text-gray-600 mb-1">
-                  <span className="font-semibold">Date:</span> {flight.date}
-                </p>
-                <p className="text-gray-600 mb-1">
-                  <span className="font-semibold">Time:</span> {flight.departureTime} - {flight.arrivalTime}
-                </p>
-                <p className="text-gray-600 mb-3">
-                  <span className="font-semibold">Class:</span> {flight.classType} | <span className="font-semibold">Price:</span> ₹{flight.price}
-                </p>
+                <p className="text-gray-600 mb-1"><span className="font-semibold">From:</span> {flight.origin}</p>
+                <p className="text-gray-600 mb-1"><span className="font-semibold">To:</span> {flight.destination}</p>
+                <p className="text-gray-600 mb-1"><span className="font-semibold">Date:</span> {flight.date}</p>
+                <p className="text-gray-600 mb-1"><span className="font-semibold">Time:</span> {flight.departureTime} - {flight.arrivalTime}</p>
+                <p className="text-gray-600 mb-3"><span className="font-semibold">Class:</span> {flight.classType} | <span className="font-semibold">Price:</span> ₹{flight.price}</p>
+                
                 <div className="flex justify-between mt-4">
                   <button className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">
                     View Details
                   </button>
-                  <button className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition">
-                    Book Now
+                  {bookedFlights[flight._id] && 
+                  <button onClick={()=>cancelingHandler(flight._id)} className={`bg-blue-600 text-white px-2 py-2 rounded-md hover:bg-blue-700 transition1 `}>cancel Booking</button>
+                  }
+                  <button
+                    onClick={() => bookingHandler(flight._id)}
+                    className={`px-4 py-2 rounded-md transition ${
+                      bookedFlights[flight._id]
+                        ? "bg-gray-400 cursor-not-allowed"
+                        : "bg-green-600 hover:bg-green-700 text-white"
+                    }`}
+                    disabled={bookedFlights[flight._id]}
+                  >
+                    {bookedFlights[flight._id] ? "Booked" : "Book Now"}
                   </button>
                 </div>
               </div>
