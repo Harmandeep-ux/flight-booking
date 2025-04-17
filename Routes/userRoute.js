@@ -65,8 +65,7 @@ userRouter.post('/signin', async (req, res) => {
 
     if (isMatch) {
         const token = jwt.sign({ id: user._id,}, process.env.Jwt_User_secret);
-        return res.cookie("auth", token );
-    } else {
+        return res.status(200).json({ token, msg: "Login successful" });    } else {
         return res.json({ msg: 'invalid credentials' });
     }
 });
