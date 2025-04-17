@@ -7,7 +7,7 @@ const { populate } = require('../Models/adminMode')
 //create
 flightRouter.post('/createFlight',adminMiddleware,async(req,res)=>{
  
-    const {name,arrivalTime,departureTime,date,destination,origin,duration,classType,price, availableSeats,status} = req.body
+    const {name,arrivalTime,departureTime,date,destination,origin,duration,classType,price, imageUrl ,availableSeats,status} = req.body
    try{
 
       const flight = await flightModel.create({
@@ -22,7 +22,8 @@ flightRouter.post('/createFlight',adminMiddleware,async(req,res)=>{
              date,
              availableSeats,
              status,
-             price
+             price,
+             imageUrl 
        })
        res.status(200).json({flight},"created Succesfully")
     //    console.log(flightModel.id)

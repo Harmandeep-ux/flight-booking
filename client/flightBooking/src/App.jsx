@@ -1,23 +1,23 @@
-// import {BrowserRouter, Routes, Route} from 'react-router-dom'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import Navbar from './components/Navbar'
+import Flights from './pages/Flights'
 import Home from './components/Home'
+import Bookings from './pages/Bookings'
 function App() {
 
   return (
     <>
-    {/* <BrowserRouter>
-    <Routes>
-
-    <Route path="/adminsignin" element={<Signin />} />
-    <Route path="/" element={<Main /> } />
-
-    </Routes>
-    </BrowserRouter> */}
     <div>
-      <Home />
-
+    <Navbar/>
+      <Routes>
+        <Route path='/' element={<Home/>}/>
+        <Route path='/flights' element={<Flights/>}/>
+        <Route path='/bookings' element={<Bookings/>}/>
+      </Routes>
+   
     </div>
     </>
   )
-}
+}                                                                                                                                  
 
 export default App

@@ -13,8 +13,6 @@ const Home = () => {
 
   return (
     <>
-      <Navbar />
-
       <div className="relative w-full h-[600px]">
         {/* ✅ Background Image */}
         <img

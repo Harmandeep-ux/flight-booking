@@ -40,6 +40,7 @@ const FlightSchema = mongoose.Schema({
   imageUrl: { type: String },    // 🖼️ (optional, if you want flight photo)
   admin: { type: mongoose.Schema.Types.ObjectId, ref: "Admin", required: true },
   date: { type: Date, required: true },
+  imageUrl: { type: String, required: true },
 }, { timestamps: true });
 
 module.exports = mongoose.model("Flight", FlightSchema);
