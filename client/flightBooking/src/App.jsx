@@ -1,25 +1,36 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import Navbar from './components/Navbar'
-import Flights from './pages/Flights'
-import Home from './components/Home'
-import Bookings from './pages/Bookings'
-import Signin from './components/Signin'
+import React, { useEffect, useState } from 'react';
+import { Routes, Route } from 'react-router-dom';
+import Navbar from './components/Navbar';
+import Home from './components/Home';
+import Flights from './pages/Flights';
+import Bookings from './pages/Bookings';
+import Signin from './components/Signin';
+
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    // Check if token exists in localStorage
+    const token = localStorage.getItem('token');
+    setIsLoggedIn(!!token);
+  }, []);
 
   return (
-    <>
     <div>
-    {/* <Navbar/>
-      <Routes>
-        <Route path='/' element={<Home/>}/>
-        <Route path='/flights' element={<Flights/>}/>
-        <Route path='/bookings' element={<Bookings/>}/>
-      </Routes>
-    */}
-    <Signin />
+      {isLoggedIn ? (
+        <>
+          <Navbar />
+          <Routes>
+            <Route path='/' element={<Home />} />
+            <Route path='/flights' element={<Flights />} />
+            <Route path='/bookings' element={<Bookings />} />
+          </Routes>
+        </>
+      ) : (
+        <Signin />
+      )}
     </div>
-    </>
-  )
-}                                                                                                                                  
+  );
+}
 
-export default App
+export default App;
