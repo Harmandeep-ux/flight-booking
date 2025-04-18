@@ -5,7 +5,7 @@ import Home from './components/Home';
 import Flights from './pages/Flights';
 import Bookings from './pages/Bookings';
 import Signin from './components/Signin';
-import BookAFlight from './components/BookAFlight';
+import BookAFlight from './components/GetBookings';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -25,6 +25,7 @@ function App() {
             <Route path='/' element={<Home />} />
             <Route path='/flights' element={<Flights />} />
             <Route path='/bookings' element={<BookAFlight />} />
+            {/* <Route path='/getbookings' element={<Bookings />} /> */}
           </Routes>
         </>
       ) : (
