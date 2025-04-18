@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 const GetBookings = () => {
   const [bookings, setBookings] = useState([]);
@@ -82,12 +83,21 @@ const GetBookings = () => {
                 <p className="text-gray-600 mb-1"><span className="font-semibold">Booking Date:</span> {new Date(booking.bookingDate).toLocaleDateString()}</p>
                 <p className="text-gray-600 mb-4"><span className="font-semibold">Seats Booked:</span> {booking.seatsBooked}</p>
 
-                <button
-                  onClick={() => cancelBooking(booking._id)}
-                  className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition"
-                >
-                  Cancel Booking
-                </button>
+                <div className="flex gap-3">
+  <button
+    onClick={() => cancelBooking(booking._id)}
+    className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition"
+  >
+    Cancel Booking
+  </button>
+
+  <Link
+  to={`/ticket/${booking._id}`}
+  className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition"
+>
+  View Ticket
+</Link>
+</div>
               </div>
             </div>
           ))}

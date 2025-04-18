@@ -3,9 +3,9 @@ import { Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Home from './components/Home';
 import Flights from './pages/Flights';
-import Bookings from './pages/Bookings';
 import Signin from './components/Signin';
 import BookAFlight from './components/GetBookings';
+import TicketPage from './components/TicketPage';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -25,8 +25,8 @@ function App() {
             <Route path='/' element={<Home />} />
             <Route path='/flights' element={<Flights />} />
             <Route path='/bookings' element={<BookAFlight />} />
-            {/* <Route path='/getbookings' element={<Bookings />} /> */}
-          </Routes>
+            <Route path="/ticket/:bookingid" element={<TicketPage/>} /> {/* 👈 Ticket page */}
+                        </Routes>
         </>
       ) : (
         <Signin />
