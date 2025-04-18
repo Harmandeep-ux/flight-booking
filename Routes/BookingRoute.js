@@ -61,7 +61,7 @@ BookingRoute.get('/ticket/:bookingid',userMiddleware,async(req,res)=>{
    })
    .populate({
     path:'flight',
-    select:'name'
+    select: 'name origin destination departureTime arrivalTime classType price date',
    })
  
    if(!booking){
