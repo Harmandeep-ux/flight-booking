@@ -10,7 +10,7 @@ const Bookings = () => {
 
   const fetchBookings = async () => {
     try {
-      const res = await axios.get("http://localhost:3000/user/bookings", {
+      const res = await axios.get("http://localhost:3000/user/book", {
         withCredentials: true, // ⬅️ Important for cookies
       });
 

@@ -22,13 +22,43 @@ const Flights = () => {
   }, []);
 
 
-  const bookingHandler = (id) => {
-    const updated = {
-      ...bookedFlights,
-      [id]: true,
-    };
-    setBookedFlights(updated);
+  const bookingHandler = async (flightId) => {
+    const token = localStorage.getItem('token');
+  
+    if (!token) {
+      alert("Please login to book a flight.");
+      return;
+    }
+  
+    const today = new Date().toISOString();
+  
+    try {
+      const res = await axios.post(
+        "http://localhost:3000/booking/book",
+        {
+          flight: flightId,
+          bookingDate: today,
+          seatsBooked: 1,
+        },
+        {
+          headers: {
+            token: token, // ✅ your backend expects this
+          },
+        }
+      );
+  
+      alert(res.data.msg);
+  
+      setBookedFlights((prev) => ({
+        ...prev,
+        [flightId]: true,
+      }));
+    } catch (error) {
+      console.error("Booking failed:", error);
+      alert(error.response?.data?.msg || "Booking failed");
+    }
   };
+  
   
   const cancelingHandler = (id) => {
     const updated = { ...bookedFlights };

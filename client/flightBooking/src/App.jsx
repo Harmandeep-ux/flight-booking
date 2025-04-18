@@ -5,6 +5,7 @@ import Home from './components/Home';
 import Flights from './pages/Flights';
 import Bookings from './pages/Bookings';
 import Signin from './components/Signin';
+import BookAFlight from './components/BookAFlight';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -23,7 +24,7 @@ function App() {
           <Routes>
             <Route path='/' element={<Home />} />
             <Route path='/flights' element={<Flights />} />
-            <Route path='/bookings' element={<Bookings />} />
+            <Route path='/bookings' element={<BookAFlight />} />
           </Routes>
         </>
       ) : (
