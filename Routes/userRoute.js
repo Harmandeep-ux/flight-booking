@@ -90,6 +90,32 @@ userRouter.get('/bookings', userMiddleware, async (req, res) => {
   }
 });
 
+
+// Cancel Booking
+userRouter.delete('/cancelBooking/:bookingId', userMiddleware, async (req, res) => {
+    try {
+      const userId = req.user.id;
+      const bookingId = req.params.bookingId;
+  
+      // Find the booking first
+      const booking = await BookingModel.findOne({ _id: bookingId, user: userId });
+  
+      if (!booking) {
+        return res.status(404).json({ msg: "Booking not found or not authorized" });
+      }
+  
+      // Optionally: increase seat count (if you maintain availableSeats in DB)
+      // You can implement this if you're managing seat availability dynamically.
+  
+      await BookingModel.findByIdAndDelete(bookingId);
+  
+      res.status(200).json({ msg: "Booking canceled successfully" });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ msg: "Failed to cancel booking" });
+    }
+  });
+  
 // userRouter.get('/bookings',async(req,res)=>{
 
 //     //  const Bookings =await BookingModel.find()

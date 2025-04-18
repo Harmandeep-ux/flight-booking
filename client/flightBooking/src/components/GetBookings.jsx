@@ -16,7 +16,7 @@ const GetBookings = () => {
     try {
       const res = await axios.get('http://localhost:3000/user/bookings', {
         headers: {
-          token: token, // ✅ Send the token to authenticate the request
+          token: token,
         },
       });
       setBookings(res.data.bookings);
@@ -25,6 +25,26 @@ const GetBookings = () => {
       alert("Error fetching bookings.");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const cancelBooking = async (bookingId) => {
+    const token = localStorage.getItem('token');
+
+    try {
+      const res = await axios.delete(`http://localhost:3000/user/cancelBooking/${bookingId}`, {
+        headers: {
+          token,
+        },
+      });
+
+      alert(res.data.msg || "Booking canceled.");
+
+      // Refresh the bookings list
+      setBookings((prev) => prev.filter((b) => b._id !== bookingId));
+    } catch (error) {
+      console.error("Cancel booking failed:", error);
+      alert("Cancel booking failed.");
     }
   };
 
@@ -59,8 +79,15 @@ const GetBookings = () => {
                 <p className="text-gray-600 mb-1"><span className="font-semibold">Date:</span> {booking.flight.date}</p>
                 <p className="text-gray-600 mb-1"><span className="font-semibold">Time:</span> {booking.flight.departureTime} - {booking.flight.arrivalTime}</p>
                 <p className="text-gray-600 mb-3"><span className="font-semibold">Class:</span> {booking.flight.classType} | <span className="font-semibold">Price:</span> ₹{booking.flight.price}</p>
-                <p className="text-gray-600 mb-1"><span className="font-semibold">Booking Date:</span> {booking.bookingDate}</p>
-                <p className="text-gray-600 mb-3"><span className="font-semibold">Seats Booked:</span> {booking.seatsBooked}</p>
+                <p className="text-gray-600 mb-1"><span className="font-semibold">Booking Date:</span> {new Date(booking.bookingDate).toLocaleDateString()}</p>
+                <p className="text-gray-600 mb-4"><span className="font-semibold">Seats Booked:</span> {booking.seatsBooked}</p>
+
+                <button
+                  onClick={() => cancelBooking(booking._id)}
+                  className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition"
+                >
+                  Cancel Booking
+                </button>
               </div>
             </div>
           ))}
