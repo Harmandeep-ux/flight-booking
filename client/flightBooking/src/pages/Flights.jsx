@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import SearchFlights from '../components/SearchFlights';
 
 const Flights = () => {
   const [flights, setFlights] = useState([]);
   const [loading, setLoading] = useState(true);
   const [bookedFlights, setBookedFlights] = useState({}); // key = flight._id, value = true/false
+  const [selectedFlight, setSelectedFlight] = useState(null); // Store the selected flight for details view
 
   const fetchAllFlights = async () => {
     try {
@@ -20,7 +22,6 @@ const Flights = () => {
   useEffect(() => {
     fetchAllFlights();
   }, []);
-
 
   const bookingHandler = async (flightId) => {
     const token = localStorage.getItem('token');
@@ -58,17 +59,26 @@ const Flights = () => {
       alert(error.response?.data?.msg || "Booking failed");
     }
   };
-  
-  
+
   const cancelingHandler = (id) => {
     const updated = { ...bookedFlights };
     delete updated[id];
     setBookedFlights(updated);
   };
 
+  const handleViewDetails = (flight) => {
+    setSelectedFlight(flight); // Set the selected flight details in state
+  };
+
+  const closeModal = () => {
+    setSelectedFlight(null); // Close the modal when clicked
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-4 py-10">
       <h1 className="text-4xl font-bold text-center mb-10 text-gray-800">✈️ Explore Available Flights</h1>
+      
+      <SearchFlights />
 
       {loading ? (
         <div className="flex justify-center items-center">
@@ -95,11 +105,19 @@ const Flights = () => {
                 <p className="text-gray-600 mb-3"><span className="font-semibold">Class:</span> {flight.classType} | <span className="font-semibold">Price:</span> ₹{flight.price}</p>
                 
                 <div className="flex justify-between mt-4">
-                  <button className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">
+                  <button 
+                    onClick={() => handleViewDetails(flight)} 
+                    className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition"
+                  >
                     View Details
                   </button>
                   {bookedFlights[flight._id] && 
-                  <button onClick={()=>cancelingHandler(flight._id)} className={`bg-blue-600 text-white px-2 py-2 rounded-md hover:bg-blue-700 transition1 `}>cancel Booking</button>
+                    <button 
+                      onClick={() => cancelingHandler(flight._id)} 
+                      className="bg-blue-600 text-white px-2 py-2 rounded-md hover:bg-blue-700 transition1"
+                    >
+                      Cancel Booking
+                    </button>
                   }
                   <button
                     onClick={() => bookingHandler(flight._id)}
@@ -119,6 +137,44 @@ const Flights = () => {
         </div>
       ) : (
         <p className="text-center text-gray-500 text-lg">No flights available at the moment.</p>
+      )}
+
+      {/* View Details Modal */}
+      {selectedFlight && (
+        <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50">
+          <div className="bg-white p-8 rounded-lg max-w-lg w-full">
+            <button onClick={closeModal} className="absolute top-2 right-2 text-xl font-semibold text-gray-600">&times;</button>
+            <h2 className="text-2xl font-semibold text-blue-800 mb-4">{selectedFlight.name} - Details</h2>
+            <p><strong>From:</strong> {selectedFlight.origin}</p>
+            <p><strong>To:</strong> {selectedFlight.destination}</p>
+            <p><strong>Date:</strong> {selectedFlight.date}</p>
+            <p><strong>Time:</strong> {selectedFlight.departureTime} - {selectedFlight.arrivalTime}</p>
+            <p><strong>Class:</strong> {selectedFlight.classType}</p>
+            <p><strong>Price:</strong> ₹{selectedFlight.price}</p>
+            <p><strong>Description:</strong> {selectedFlight.description || 'No description available.'}</p>
+            <p><strong>Duration:</strong> {selectedFlight.duration}</p>
+            <p><strong>Available Seats:</strong> {selectedFlight.availableSeats}</p>
+            <div className="mt-4 flex justify-between">
+              <button 
+                onClick={() => bookingHandler(selectedFlight._id)} 
+                className={`px-4 py-2 rounded-md transition ${
+                  bookedFlights[selectedFlight._id]
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "bg-green-600 hover:bg-green-700 text-white"
+                }`}
+                disabled={bookedFlights[selectedFlight._id]}
+              >
+                {bookedFlights[selectedFlight._id] ? "Booked" : "Book Now"}
+              </button>
+              <button 
+                onClick={closeModal} 
+                className="px-4 py-2 rounded-md bg-gray-400 hover:bg-gray-500 text-white"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
