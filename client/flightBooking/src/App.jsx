@@ -26,6 +26,7 @@ function App() {
             <Route path='/flights' element={<Flights />} />
             <Route path='/bookings' element={<BookAFlight />} />
             <Route path="/ticket/:bookingid" element={<TicketPage/>} /> {/* 👈 Ticket page */}
+            <Route path='/login' element={<Signin/>} />
                         </Routes>
         </>
       ) : (
