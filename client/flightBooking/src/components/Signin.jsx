@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
-const AuthForm = () => {
+const Signin = ({ setIsLoggedIn }) => {
   const [mode, setMode] = useState('signin');
   const [formData, setFormData] = useState({
     username: '',
@@ -9,6 +10,7 @@ const AuthForm = () => {
     password: '',
   });
   const [message, setMessage] = useState('');
+  const navigate = useNavigate(); // Hook to navigate programmatically
 
   const handleChange = (e) => {
     setFormData(prev => ({
@@ -20,7 +22,6 @@ const AuthForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // ✅ Fixed endpoint URLs based on your working version
     const endpoint = mode === 'signin' ? '/user/signin' : '/user/signup';
     const url = `http://localhost:3000${endpoint}`;
 
@@ -30,6 +31,8 @@ const AuthForm = () => {
       if (data.token) {
         localStorage.setItem('token', data.token);
         setMessage('Login successful!');
+        setIsLoggedIn(true); // Update the login state in App.js
+        navigate('/'); // Redirect to homepage or wherever you want after login
       } else {
         setMessage(data.msg || 'Done!');
       }
@@ -96,4 +99,4 @@ const AuthForm = () => {
   );
 };
 
-export default AuthForm;
+export default Signin;
