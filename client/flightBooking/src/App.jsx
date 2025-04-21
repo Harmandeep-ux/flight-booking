@@ -6,29 +6,30 @@ import Flights from './pages/Flights';
 import Signin from './components/Signin';
 import BookAFlight from './components/GetBookings';
 import TicketPage from './components/TicketPage';
+import AdminRoutes from './admin/AdminRoutes'; // ✅ Import
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  // Check if the user is logged in when the component mounts
   useEffect(() => {
-    const token = localStorage.getItem('token');  // Get the token from localStorage
-    if (token) {
-      setIsLoggedIn(true);  // User is logged in if the token exists
-    }
-  }, []); // The empty array means this effect runs only once when the component mounts
+    const token = localStorage.getItem('token');
+    if (token) setIsLoggedIn(true);
+  }, []);
 
   return (
     <div>
-      {/* Navbar is always shown */}
       <Navbar setIsLoggedIn={setIsLoggedIn} />
 
       <Routes>
-        {/* Public routes accessible without login */}
+        {/* Public Routes */}
         <Route path="/" element={<Home />} />
         <Route path="/flights" element={<Flights />} />
 
-        {/* Protected routes that require login */}
+        {/* Auth Routes */}
+        <Route path="/login" element={<Signin setIsLoggedIn={setIsLoggedIn} />} />
+        <Route path="/signup" element={<Signin setIsLoggedIn={setIsLoggedIn} />} />
+
+        {/* Protected Routes */}
         <Route
           path="/bookings"
           element={isLoggedIn ? <BookAFlight /> : <Signin setIsLoggedIn={setIsLoggedIn} />}
@@ -38,9 +39,8 @@ function App() {
           element={isLoggedIn ? <TicketPage /> : <Signin setIsLoggedIn={setIsLoggedIn} />}
         />
 
-        {/* Routes for Login and Sign Up */}
-        <Route path="/login" element={<Signin setIsLoggedIn={setIsLoggedIn} />} />
-        <Route path="/signup" element={<Signin setIsLoggedIn={setIsLoggedIn} />} />
+        {/* ✅ Admin Panel Route */}
+        <Route path="/admin/*" element={<AdminRoutes />} />
       </Routes>
     </div>
   );

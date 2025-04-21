@@ -1,4 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
+import AdminLayout from '../Admin/AdminLayout';
+import AdminRoutes from '../Admin/AdminRoutes';
 
 const Navbar = ({ setIsLoggedIn }) => {
   const navigate = useNavigate();
@@ -11,6 +13,7 @@ const Navbar = ({ setIsLoggedIn }) => {
   };
 
   return (
+    <>
     <nav className='w-full bg-gradient-to-r from-blue-600 to-sky-500 h-20 flex items-center justify-between px-10 shadow-lg sticky top-0 z-40'>
       <Link to='/' className='flex items-center space-x-2 group'>
         <span className='text-3xl font-bold text-white group-hover:text-yellow-300 transition-colors duration-300'>
@@ -53,6 +56,7 @@ const Navbar = ({ setIsLoggedIn }) => {
         )}
       </div>
     </nav>
+    </>
   );
 };
 
