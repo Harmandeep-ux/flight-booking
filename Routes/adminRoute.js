@@ -110,4 +110,27 @@ AdminRouter.get('/totalUsers',adminMiddleware,async(req,res)=>{
         return res.status(400).json({msg:'error whule getting users'})
     }
 })
+
+//admin delete the user 
+AdminRouter.put('/deleteUser/:id',adminMiddleware,async(req,res)=>{
+
+    const userId = req.params.id
+     
+    try{
+        const totalUsers = await userModel.findByIdAndDelete(
+            userId
+        )
+
+        if(totalUsers){
+          return  res.status(200).json({msg:"deleted"})
+        }else{
+            res.status(400).json({msg:'something went wrong'})
+        }
+
+    }catch(err){
+        return res.status(400).json({msg:"error while deleting"})
+    }
+})
+
+
  module.exports = AdminRouter
