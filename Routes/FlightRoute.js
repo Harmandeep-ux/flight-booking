@@ -31,37 +31,62 @@ flightRouter.post('/createFlight',adminMiddleware,async(req,res)=>{
         res.status(400).json({msg:"error while createing FLight"})
     }
 })
+flightRouter.put('/updateFlight/:id',adminMiddleware,async(req,res)=>{
 
-flightRouter.get('/searchFlights',async(req,res)=>{
+    const flightId = req.params.id;
+    const updates = req.body;
 
-    const {name,origin,destination,classType,price} = req.query
+    try{
+   const updatedFlight = await flightModel.findByIdAndUpdate(
+    flightId,
+    updates,
+    {new: true}
+   )
 
-    const query ={}
-
-    const orConditions = []
-
-    if(destination){
-    orConditions.push({destination: {$regex:destination , $options:"i" }})
+   if(!updatedFlight){
+    return res.status(400).json({msg:"Flight not Found"})
+   }else{
+    res.status(200).json({updatedFlight})
+   }
+    }catch(err){
+     return res.status(400).json({msg:'error while updating'})
+    }
     
-    }
-    if(origin){
-      orConditions.push({origin:{$regex:origin, $options:"i"}})
-    }
-    if(orConditions.length > 0){
-        query.$or = orConditions
-    }
-    if(price){
-        query.price = {$lte:price, }
-    }
-    if(classType){
-        query.classType = {$regex:classType , $options:"i"}
-    }
-
-    if(name){
-        query.name = {$regex:name, $options:"i"}
-    }
-
-    const flight =await flightModel.find(query)
-    res.status(200).json({flight})
 })
+flightRouter.delete('/DeleteFlight',adminMiddleware,(req,res)=>{
+
+})
+
+// flightRouter.get('/searchFlights',async(req,res)=>{
+
+//     const {name,origin,destination,classType,price} = req.query
+
+//     const query ={}
+
+//     const orConditions = []
+
+//     if(destination){
+//     orConditions.push({destination: {$regex:destination , $options:"i" }})
+    
+//     }
+//     if(origin){
+//       orConditions.push({origin:{$regex:origin, $options:"i"}})
+//     }
+//     if(orConditions.length > 0){
+//         query.$or = orConditions
+//     }
+//     if(price){
+//         query.price = {$lte:price, }
+//     }
+//     if(classType){
+//         query.classType = {$regex:classType , $options:"i"}
+//     }
+
+//     if(name){
+//         query.name = {$regex:name, $options:"i"}
+//     }
+
+//     const flight =await flightModel.find(query)
+//     res.status(200).json({flight})
+// })
 module.exports = flightRouter
