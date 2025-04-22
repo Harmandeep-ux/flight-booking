@@ -82,36 +82,36 @@ flightRouter.get("/allFlights",async(req,res)=>{
            res.json({err})
        }
 })
-// flightRouter.get('/searchFlights',async(req,res)=>{
+flightRouter.get('/searchFlights',async(req,res)=>{
 
-//     const {name,origin,destination,classType,price} = req.query
+    const {name,origin,destination,classType,price} = req.query
 
-//     const query ={}
+    const query ={}
 
-//     const orConditions = []
+    const orConditions = []
 
-//     if(destination){
-//     orConditions.push({destination: {$regex:destination , $options:"i" }})
+    if(destination){
+    orConditions.push({destination: {$regex:destination , $options:"i" }})
     
-//     }
-//     if(origin){
-//       orConditions.push({origin:{$regex:origin, $options:"i"}})
-//     }
-//     if(orConditions.length > 0){
-//         query.$or = orConditions
-//     }
-//     if(price){
-//         query.price = {$lte:price, }
-//     }
-//     if(classType){
-//         query.classType = {$regex:classType , $options:"i"}
-//     }
+    }
+    if(origin){
+      orConditions.push({origin:{$regex:origin, $options:"i"}})
+    }
+    if(orConditions.length > 0){
+        query.$or = orConditions
+    }
+    if(price){
+        query.price = {$lte:price, }
+    }
+    if(classType){
+        query.classType = {$regex:classType , $options:"i"}
+    }
 
-//     if(name){
-//         query.name = {$regex:name, $options:"i"}
-//     }
+    if(name){
+        query.name = {$regex:name, $options:"i"}
+    }
 
-//     const flight =await flightModel.find(query)
-//     res.status(200).json({flight})
-// })
+    const flight =await flightModel.find(query)
+    res.status(200).json({flight})
+})
 module.exports = flightRouter
