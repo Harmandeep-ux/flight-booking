@@ -2,7 +2,7 @@ const express = require('express')
 const flightRouter = express.Router()
 const flightModel = require('../Models/flightModel')
 const {adminMiddleware} = require('../Middleware/authMiddleware')
-const { populate } = require('../Models/adminMode')
+const { populate, findByIdAndDelete } = require('../Models/adminMode')
 
 //create
 flightRouter.post('/createFlight',adminMiddleware,async(req,res)=>{
@@ -53,8 +53,22 @@ flightRouter.put('/updateFlight/:id',adminMiddleware,async(req,res)=>{
     }
     
 })
-flightRouter.delete('/DeleteFlight',adminMiddleware,(req,res)=>{
-
+flightRouter.delete('/DeleteFlight/:id',adminMiddleware,async(req,res)=>{
+     
+    const flightId = req.params.id;
+   try{
+     
+    const deleted = await flightModel.findByIdAndDelete(
+        flightId
+    )
+    if(!deleted){
+      return  res.status(400).json({msg:"error occured"})
+    }else{
+       res.json(200).json({deleted})
+    }
+   }catch(err){
+    return res.status(400).json({msg:"error while deleting"})
+   }
 })
 
 // flightRouter.get('/searchFlights',async(req,res)=>{
