@@ -70,7 +70,18 @@ flightRouter.delete('/DeleteFlight/:id',adminMiddleware,async(req,res)=>{
     return res.status(400).json({msg:"error while deleting"})
    }
 })
-
+flightRouter.get("/allFlights",async(req,res)=>{
+      try{
+          const flights = await flightModel.find()
+          if(flights.length >0){
+           res.json({flights})
+          }else{
+           res.json({msg:"no flights are available right now"})
+          }
+       }catch(err){
+           res.json({err})
+       }
+})
 // flightRouter.get('/searchFlights',async(req,res)=>{
 
 //     const {name,origin,destination,classType,price} = req.query
