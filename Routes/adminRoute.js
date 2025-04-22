@@ -3,7 +3,10 @@ const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const { z } = require('zod');
 const adminModel = require('../Models/adminMode');
-const {adminMiddleware} = require('../Middleware/authMiddleware')
+const {adminMiddleware} = require('../Middleware/authMiddleware');
+const flightModel = require('../Models/flightModel');
+const BookingModel = require('../Models/BookingModel');
+const userModel = require('../Models/userModel');
 const AdminRouter = express.Router()
 
 const signupSchema = z.object({
@@ -65,8 +68,46 @@ AdminRouter.post('/signin',async (req,res)=>{
 AdminRouter.put('/updateBookings',adminMiddleware,(req,res)=>{
     res.send("hii")
 })
-AdminRouter.get('/bookings',adminMiddleware,(req,res)=>{
-    res.send("hii")
+AdminRouter.get('/totalBookings',adminMiddleware,async(req,res)=>{
+    
+    const Bookings = await BookingModel.find()
+    try{
+        if(Bookings.length > 0){
+            return res.status(200).json({total:Bookings.length})
+        }else{
+            res.status(400).json({msg:"something went wrong"})
+        }
+    }catch(err){
+        return res.status(400).json({msg:"error while getting bookings length"})
+    }
 })
 
+AdminRouter.get('/totalFlights',adminMiddleware,async(req,res)=>{
+     
+    const totalFlights = await flightModel.find()
+    try{
+        if(totalFlights.length > 0){
+            return res.status(200).json({total: totalFlights.length})
+        }else{
+          res.status(400).json({msg:'something went wrong'})
+        }
+    }catch(err){
+        return res.status(400).json({msg:'error while getting flights'})
+    }
+    
+})
+
+AdminRouter.get('/totalUsers',adminMiddleware,async(req,res)=>{
+    
+    const totalUsers = await userModel.find()
+    try{
+       if(totalUsers.length > 0){
+       return res.status(200).json({total: totalUsers.length})
+       }else{
+        res.status(400).json({msg:"something went wrong"})
+       }
+    }catch(err){
+        return res.status(400).json({msg:'error whule getting users'})
+    }
+})
  module.exports = AdminRouter
