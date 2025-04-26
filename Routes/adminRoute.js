@@ -132,5 +132,28 @@ AdminRouter.put('/deleteUser/:id',adminMiddleware,async(req,res)=>{
     }
 })
 
+//admin Block Unblocks User
+AdminRouter.post('/blockUser/:id',adminMiddleware,async(req,res)=>{
+    
+    const user = req.params.id;
+
+    try{
+     const foundedUser = await userModel.findById(
+        user
+     )
+
+    foundedUser.isBlocked = !foundedUser.isBlocked;
+    await foundedUser.save()
+
+    return res.status(200).json({ 
+        msg: `User has been ${foundedUser.isBlocked ? "blocked" : "unblocked"}`,
+        isBlocked: foundedUser.isBlocked
+      });
+
+    }catch(err){
+        return res.status(400).json({msg:"error while blocking or unblocking"})
+    }
+})
+
 
  module.exports = AdminRouter

@@ -5,6 +5,10 @@ const UserSchema = new mongoose.Schema({
    email:String,
    username:String,
    password:String,
+   isBlocked: {
+      type: Boolean,
+      default: false
+    }
    
 })
 
